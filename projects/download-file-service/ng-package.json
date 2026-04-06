@@ -3,5 +3,10 @@
   "dest": "../../dist/download-file-service",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "xlsx",
+    "jspdf",
+    "jspdf-autotable"
+  ]
 }
