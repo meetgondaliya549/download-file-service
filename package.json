@@ -1,6 +1,11 @@
 {
   "name": "download-file-service",
   "version": "0.0.1",
+
+  "main": "dist/download-file-service/fesm2022/download-file-service.mjs",
+  "module": "dist/download-file-service/fesm2022/download-file-service.mjs",
+  "typings": "dist/download-file-service/index.d.ts",
+
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
