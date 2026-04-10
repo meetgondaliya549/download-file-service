@@ -357,7 +357,7 @@ export class DownloadFileService {
               }
               return ptsValue;
             case 'MRP':
-              return this.getValue(row['MRP']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, ''));
+              return this.getValue(row['MRP'].replace(this.deps.utilService.NUMBER_REGEX, ''));
             case 'QTY':
               return this.splitDigitsByPlus(
                 row['QTY']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, '')
