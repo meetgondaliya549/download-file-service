@@ -276,14 +276,14 @@ export class DownloadFileService {
 
       let disPer: number = 0;
       const discount = parseFloat(
-        this.splitDigitsByPlus(row['DISCOUNT']?.toString().replace(/,/g, '.'))[
+        this.splitDigitsByPlus(row['DISCOUNT']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, ''))[
         'after_input'
         ]
       );
       const discountAmt = parseFloat(
         this.getValue(row['DIS AMT']?.toString().replace(/,/g, '.'))
       );
-      const discountInPer = row['DISCOUNT']?.toString().replace(/,/g, '.');
+      const discountInPer = row['DISCOUNT']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, '');
       const discountInAmt = row['DIS AMT']?.toString().replace(/,/g, '.');
 
       if (!discountInPer || discountInPer === this.deps.appString.NULL) {
@@ -357,10 +357,10 @@ export class DownloadFileService {
               }
               return ptsValue;
             case 'MRP':
-              return this.getValue(row['MRP']);
+              return this.getValue(row['MRP']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, ''));
             case 'QTY':
               return this.splitDigitsByPlus(
-                row['QTY']?.toString().replace(/,/g, '.')
+                row['QTY']?.toString().replace(/,/g, '.').replace(this.deps.utilService.NUMBER_REGEX, '')
               )['before_input'];
             case 'DISCOUNT':
               return disPer;
@@ -1355,12 +1355,26 @@ export class DownloadFileService {
       let year: number;
 
       // ✅ Case 1: DD-MM-YYYY
+      // ✅ Case 1: 3 parts (DD-MM-YYYY OR YYYY-MM-DD)
       if (parts.length === 3) {
-        day = parseInt(parts[0]);
-        month = parseInt(parts[1]);
-        year = parseInt(parts[2]);
+        let p1 = parseInt(parts[0]);
+        let p2 = parseInt(parts[1]);
+        let p3 = parseInt(parts[2]);
 
-        if (isNaN(day) || isNaN(month) || isNaN(year)) return '';
+        if (isNaN(p1) || isNaN(p2) || isNaN(p3)) return '';
+
+        // 👉 Detect format
+        if (parts[0].length === 4) {
+          // YYYY-MM-DD
+          year = p1;
+          month = p2;
+          day = p3;
+        } else {
+          // DD-MM-YYYY
+          day = p1;
+          month = p2;
+          year = p3;
+        }
 
         return (
           day.toString().padStart(2, '0') +
